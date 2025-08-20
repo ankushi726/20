@@ -80,7 +80,9 @@ export const PRODUCTS = {
 
 // Storage efficiency factors by packaging type
 export const STORAGE_FACTORS = {
-  "Loose": 0.45,      // Loose products
+  "Loose": 0.45,      // Loose products  
   "Boxed": 0.65,      // Boxed/crated products  
-  "Palletized": 0.75  // Palletized storage
+  "Palletized": 0.75, // Palletized storage
+  "Bulk": 0.50,       // Bulk storage
+  "Racked": 0.70      // Racked storage
 };

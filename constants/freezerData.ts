@@ -32,7 +32,7 @@ export const FREEZER_DEFAULTS = {
   fanMotorRating: 0.37, // kW
   numberOfFans: 6,
   fanOperatingHours: 24,
-  fanAirFlowRate: 2000, // CFM per fan
+  fanAirFlowRate: '2000', // CFM per fan
   doorHeatersLoad: 0.24, // kW
   trayHeatersLoad: 2.0, // kW
   peripheralHeatersLoad: 0, // kW

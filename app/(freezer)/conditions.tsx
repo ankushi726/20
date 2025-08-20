@@ -69,6 +69,13 @@ export default function ConditionsScreen() {
             value={conditions.roomHumidity} 
             onChangeText={(value) => handleInputChange('roomHumidity', value)} 
           />
+          
+          <InputCard 
+            label="Steam Humidifiers Load" 
+            unit="kW" 
+            value={conditions.steamHumidifierLoad} 
+            onChangeText={(value) => handleInputChange('steamHumidifierLoad', value)} 
+          />
         </View>
 
         <View style={styles.section}>

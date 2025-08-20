@@ -83,7 +83,7 @@ export function calculateEnhancedFreezerLoad(
   const fanMotorRating = parseFloat(productData.fanMotorRating) || 0.37;
   const numberOfFans = parseFloat(productData.numberOfFans) || 6;
   const fanOperatingHours = parseFloat(productData.fanOperatingHours) || 24;
-  const fanAirFlowRate = parseFloat((productData as any).fanAirFlowRate) || 2000;
+  const fanAirFlowRate = parseFloat(productData.fanAirFlowRate || '2000') || 2000;
   const doorHeatersLoad = parseFloat(productData.doorHeatersLoad) || 0.24;
   const trayHeatersLoad = parseFloat(productData.trayHeatersLoad) || 2.0;
   const peripheralHeatersLoad = parseFloat(productData.peripheralHeatersLoad) || 0;
@@ -113,7 +113,7 @@ export function calculateEnhancedFreezerLoad(
   const latentHeat = productData.customLatentHeat ? parseFloat(productData.customLatentHeat) : product.latentHeat;
   
   // Calculate storage capacity
-  const maxStorageCapacity = volume * product.density * product.storageEfficiency * storageFactor;
+  const maxStorageCapacity = volume * (product?.density || 800) * (product?.storageEfficiency || 0.65) * (storageFactor || 0.65);
   const storageUtilization = (dailyLoad / maxStorageCapacity) * 100;
   
   // 1. EXACT Excel Formula: Transmission Load (Q = U × A × ΔT × hrs / 1000)
@@ -147,18 +147,18 @@ export function calculateEnhancedFreezerLoad(
     let sensibleBelow = 0;
     
     // Stage 1: Sensible heat above freezing
-    if (incomingTemp > product.freezingPoint) {
-      sensibleAbove = (mass * specificHeatAbove * (incomingTemp - product.freezingPoint)) / (pullDownHours * 3.6);
+    if (incomingTemp > (product?.freezingPoint || -2)) {
+      sensibleAbove = (mass * specificHeatAbove * (incomingTemp - (product?.freezingPoint || -2))) / (pullDownHours * 3.6);
     }
     
     // Stage 2: Latent heat during freezing
-    if (outgoingTemp < product.freezingPoint && incomingTemp > product.freezingPoint) {
+    if (outgoingTemp < (product?.freezingPoint || -2) && incomingTemp > (product?.freezingPoint || -2)) {
       latentLoad = (mass * latentHeat) / (pullDownHours * 3.6);
     }
     
     // Stage 3: Sensible heat below freezing
-    if (outgoingTemp < product.freezingPoint) {
-      sensibleBelow = (mass * specificHeatBelow * Math.abs(product.freezingPoint - outgoingTemp)) / (pullDownHours * 3.6);
+    if (outgoingTemp < (product?.freezingPoint || -2)) {
+      sensibleBelow = (mass * specificHeatBelow * Math.abs((product?.freezingPoint || -2) - outgoingTemp)) / (pullDownHours * 3.6);
     }
     
     return {
@@ -167,9 +167,9 @@ export function calculateEnhancedFreezerLoad(
       sensibleBelow,
       total: sensibleAbove + latentLoad + sensibleBelow,
       // For detailed display (kJ/day)
-      sensibleAboveKJDay: mass * specificHeatAbove * (incomingTemp - product.freezingPoint),
+      sensibleAboveKJDay: mass * specificHeatAbove * (incomingTemp - (product?.freezingPoint || -2)),
       latentKJDay: mass * latentHeat,
-      sensibleBelowKJDay: mass * specificHeatBelow * Math.abs(product.freezingPoint - outgoingTemp)
+      sensibleBelowKJDay: mass * specificHeatBelow * Math.abs((product?.freezingPoint || -2) - outgoingTemp)
     };
   };
   
@@ -313,7 +313,7 @@ export function calculateEnhancedFreezerLoad(
       incomingTemp,
       outgoingTemp,
       properties: {
-        ...product,
+        ...(product || {}),
         specificHeatAbove,
         specificHeatBelow,
         latentHeat

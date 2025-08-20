@@ -304,15 +304,15 @@ export default function ProductScreen() {
             </View>
             <View style={styles.summaryRow}>
               <Text style={styles.summaryLabel}>Total Air Flow:</Text>
-              <Text style={styles.summaryValue}>{totalAirFlow.toFixed(0)} CFM</Text>
+              <Text style={styles.summaryValue}>{(totalAirFlow || 0).toFixed(0)} CFM</Text>
             </View>
             <View style={styles.summaryRow}>
               <Text style={styles.summaryLabel}>Total Fan Load:</Text>
-              <Text style={styles.summaryValue}>{totalFanLoad.toFixed(2)} kW</Text>
+              <Text style={styles.summaryValue}>{(totalFanLoad || 0).toFixed(2)} kW</Text>
             </View>
             <View style={styles.summaryRow}>
               <Text style={styles.summaryLabel}>Total Heater Load:</Text>
-              <Text style={styles.summaryValue}>{totalHeaterLoad.toFixed(2)} kW</Text>
+              <Text style={styles.summaryValue}>{(totalHeaterLoad || 0).toFixed(2)} kW</Text>
             </View>
             <View style={styles.summaryRow}>
               <Text style={styles.summaryLabel}>People Load:</Text>

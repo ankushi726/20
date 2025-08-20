@@ -80,10 +80,10 @@ export default function HomeScreen() {
               </LinearGradient>
             </TouchableOpacity>
           </View>
-
-          <View style={styles.footer}>
-            <Text style={styles.footerText}>Professional refrigeration engineering calculations</Text>
-          </View>
+        </View>
+        
+        <View style={styles.footer}>
+          <Text style={styles.footerText}>Professional refrigeration engineering calculations</Text>
         </View>
       </View>
     </LinearGradient>
@@ -117,10 +117,10 @@ const styles = StyleSheet.create({
   scrollContainer: {
     flex: 1,
     paddingHorizontal: 20,
+    paddingBottom: 20,
   },
   optionsContainer: {
     gap: 16,
-    paddingBottom: 20,
   },
   optionCard: {
     borderRadius: 16,
@@ -155,12 +155,14 @@ const styles = StyleSheet.create({
   },
   footer: {
     alignItems: 'center',
-    paddingVertical: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    paddingBottom: 40,
   },
   footerText: {
     fontSize: 12,
     color: '#64748B',
     textAlign: 'center',
-    paddingHorizontal: 20,
+    lineHeight: 16,
   },
 });
