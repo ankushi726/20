@@ -350,7 +350,7 @@ export function calculateEnhancedFreezerLoad(
     workingHours,
     totalLoad: totalLoadBeforeSafety,
     totalLoadWithSafety: finalLoad,
-    airChangeRate: ENHANCED_CONSTANTS.airChangeRates.freezer
+    airChangeRate: ENHANCED_CONSTANTS.airChangeRates.freezer,
     
     // Additional data for results display
     productData: {
