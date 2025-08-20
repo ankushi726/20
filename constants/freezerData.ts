@@ -13,7 +13,6 @@ export const FREEZER_DEFAULTS = {
   operatingHours: 24,
   pullDownTime: 10,
   roomHumidity: 85, // %RH - critical for SHR
-  airFlowPerFan: 2000, // CFM
   steamHumidifierLoad: 0, // kW
   
   // Construction
@@ -27,19 +26,20 @@ export const FREEZER_DEFAULTS = {
   dailyProductLoad: 1000,
   productIncomingTemp: 25,
   productOutgoingTemp: -18,
-  storageType: "Boxed",
+  storageType: "Boxed", // Default storage type
   
   // Equipment details
   fanMotorRating: 0.37, // kW
   numberOfFans: 6,
   fanOperatingHours: 24,
+  fanAirFlowRate: 2000, // CFM per fan
   doorHeatersLoad: 0.24, // kW
   trayHeatersLoad: 2.0, // kW
   peripheralHeatersLoad: 0, // kW
   
   // Usage
   numberOfPeople: 2,
-  hoursWorking: 4,
+  hoursWorking: 16, // Updated from 4 to 16 hours
   dailyDoorOpenings: 15,
   lightingWattage: 150,
   equipmentLoad: 300
@@ -50,16 +50,19 @@ export const ENHANCED_CONSTANTS = {
   // Air properties
   airDensity: 1.2, // kg/m³
   airSpecificHeat: 1.006, // kJ/kg·K
-  enthalpyDiff: 0.1203, // kJ/L for air change calculations
+  enthalpyDiff: 0.1203, // kJ/L for air change calculations (CRITICAL)
   
   // Equipment defaults
   fanMotorRating: 0.37, // kW
   fanQuantity: 6,
+  defaultFanAirFlow: 2000, // CFM per fan
   doorHeaterLoad: 0.24, // kW for doors > 1.8m²
+  doorHeaterThreshold: 1.8, // m² - doors larger than this need heaters
+  doorInfiltrationFactor: 1800, // Infiltration calculation factor
   
   // Humidity constants
   defaultHumidity: 85, // %RH
-  steamGenCapacity: 0.407, // kW per unit
+  steamGeneratorCapacity: 0.407, // kW per unit
   
   // Air change rates by room type
   airChangeRates: {
@@ -68,13 +71,13 @@ export const ENHANCED_CONSTANTS = {
     coldRoom: 0.3
   },
   
-  // Door infiltration constants
-  doorInfiltrationFactor: 1800, // W per m² per opening
-  doorHeaterThreshold: 1.8, // m² - doors larger than this need heaters
-  
   // Heater capacities
   peripheralHeaterCapacity: 100, // W/m²
-  trayHeaterCapacity: 500, // W default
+  defaultTrayHeatersLoad: 2.0, // kW
+  defaultDoorHeatersLoad: 0.24, // kW
+  
+  // Updated occupancy hours
+  defaultOccupancyHours: 16, // Update from 4 to match Excel
   
   // Safety factor
   safetyFactor: 1.1 // 10%

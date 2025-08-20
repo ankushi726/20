@@ -13,7 +13,6 @@ export default function ConditionsScreen() {
     operatingHours: FREEZER_DEFAULTS.operatingHours.toString(),
     pullDownTime: FREEZER_DEFAULTS.pullDownTime.toString(),
     roomHumidity: FREEZER_DEFAULTS.roomHumidity.toString(),
-    airFlowPerFan: FREEZER_DEFAULTS.airFlowPerFan.toString(),
     steamHumidifierLoad: FREEZER_DEFAULTS.steamHumidifierLoad.toString(),
   });
 
@@ -43,11 +42,10 @@ export default function ConditionsScreen() {
   const externalTemp = parseFloat(conditions.externalTemp) || 0;
   const internalTemp = parseFloat(conditions.internalTemp) || 0;
   const tempDifference = externalTemp - internalTemp;
-  const totalAirFlow = parseFloat(conditions.airFlowPerFan) * 6; // Assuming 6 fans default
 
   return (
     <LinearGradient colors={['#F8FAFC', '#EBF8FF']} style={styles.container}>
-      <Header title="Operating Conditions" showBack={true} />
+      <Header title="Operating Conditions" step={2} totalSteps={4} />
       
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.section}>
@@ -89,17 +87,6 @@ export default function ConditionsScreen() {
             value={conditions.pullDownTime} 
             onChangeText={(value) => handleInputChange('pullDownTime', value)} 
           />
-        </View>
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Air System</Text>
-          
-          <InputCard 
-            label="Air Flow per Fan" 
-            unit="CFM" 
-            value={conditions.airFlowPerFan} 
-            onChangeText={(value) => handleInputChange('airFlowPerFan', value)} 
-          />
           
           <InputCard 
             label="Steam Humidifiers Load" 
@@ -121,10 +108,6 @@ export default function ConditionsScreen() {
               <Text style={styles.calculatedLabel}>Operating Factor:</Text>
               <Text style={styles.calculatedValue}>{(parseFloat(conditions.operatingHours) / 24).toFixed(2)}</Text>
             </View>
-            <View style={styles.calculatedRow}>
-              <Text style={styles.calculatedLabel}>Total Air Flow:</Text>
-              <Text style={styles.calculatedValue}>{totalAirFlow.toFixed(0)} CFM</Text>
-            </View>
           </View>
         </View>
 
@@ -133,7 +116,6 @@ export default function ConditionsScreen() {
           <Text style={styles.infoText}>• Standard freezer: -18°C to -25°C</Text>
           <Text style={styles.infoText}>• External ambient: 25°C to 45°C</Text>
           <Text style={styles.infoText}>• Humidity: 80-90% RH typical</Text>
-          <Text style={styles.infoText}>• Air flow: 1500-2500 CFM per fan</Text>
           <Text style={styles.infoText}>• Continuous operation: 24 hours/day</Text>
           <Text style={styles.infoText}>• Pull-down time: 8-12 hours typical</Text>
         </View>

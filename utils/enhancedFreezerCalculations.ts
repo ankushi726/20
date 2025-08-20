@@ -83,6 +83,7 @@ export function calculateEnhancedFreezerLoad(
   const fanMotorRating = parseFloat(productData.fanMotorRating) || 0.37;
   const numberOfFans = parseFloat(productData.numberOfFans) || 6;
   const fanOperatingHours = parseFloat(productData.fanOperatingHours) || 24;
+  const fanAirFlowRate = parseFloat((productData as any).fanAirFlowRate) || 2000;
   const doorHeatersLoad = parseFloat(productData.doorHeatersLoad) || 0.24;
   const trayHeatersLoad = parseFloat(productData.trayHeatersLoad) || 2.0;
   const peripheralHeatersLoad = parseFloat(productData.peripheralHeatersLoad) || 0;
@@ -192,18 +193,15 @@ export function calculateEnhancedFreezerLoad(
     };
   };
   
-  // 4. CRITICAL FIX: Door Opening Load (Excel-accurate)
+  // 4. CRITICAL FIX: Door Opening Load (Excel-accurate formula)
   const calculateDoorLoad = () => {
     const doorClearOpening = doorWidth * doorHeight; // m²
     
-    // Door heaters load based on door size
-    let doorHeatersLoadCalc = 0;
-    if (doorClearOpening > ENHANCED_CONSTANTS.doorHeaterThreshold) {
-      doorHeatersLoadCalc = ENHANCED_CONSTANTS.doorHeaterLoad; // 0.24 kW for large doors
-    }
+    // Door heaters load (automatic based on door size)
+    const doorHeatersLoadCalc = doorClearOpening > 1.8 ? 0.24 : 0; // kW
     
-    // Door infiltration load (Excel formula)
-    const doorInfiltrationLoad = (doorOpenings * doorClearOpening * ENHANCED_CONSTANTS.doorInfiltrationFactor) / (operatingHours * 1000);
+    // Door infiltration using Excel method: (openings × area × 1800) / (operating hours × 1000)
+    const doorInfiltrationLoad = (doorOpenings * doorClearOpening * 1800) / (operatingHours * 1000);
     
     const totalDoorLoad = doorInfiltrationLoad + doorHeatersLoadCalc;
     
@@ -213,7 +211,7 @@ export function calculateEnhancedFreezerLoad(
       total: totalDoorLoad,
       doorClearOpening,
       // For detailed display
-      infiltrationKJDay: doorOpenings * doorClearOpening * ENHANCED_CONSTANTS.doorInfiltrationFactor * operatingHours / 1000
+      infiltrationKJDay: doorOpenings * doorClearOpening * 1800 * operatingHours / 1000
     };
   };
   
@@ -223,7 +221,7 @@ export function calculateEnhancedFreezerLoad(
     const lightingLoad = (lightingWattage * operatingHours) / (1000 * 24); // kW
     const otherEquipmentLoad = (equipmentLoad * operatingHours) / (1000 * 24); // kW
     
-    // Fan motor load (separate calculation)
+    // SEPARATE Fan motor load calculation
     const fanMotorLoad = fanMotorRating * numberOfFans * (fanOperatingHours / 24);
     
     // Heater loads
@@ -281,8 +279,8 @@ export function calculateEnhancedFreezerLoad(
   const totalTR = finalLoad / 3.517; // kW to TR
   const totalBTU = finalLoad * 3412; // kW to BTU/hr
   
-  // Air circulation requirements
-  const totalAirFlow = airFlowPerFan * numberOfFans; // CFM
+  // Air circulation requirements (CFM calculation)
+  const totalAirFlow = fanAirFlowRate * numberOfFans; // CFM
   
   return {
     dimensions: { length, width, height },
@@ -323,7 +321,7 @@ export function calculateEnhancedFreezerLoad(
     },
     conditions: {
       humidity: roomHumidity,
-      airFlowPerFan,
+      airFlowPerFan: fanAirFlowRate,
       totalAirFlow,
       steamLoad: steamHumidifierLoad
     },
@@ -353,5 +351,12 @@ export function calculateEnhancedFreezerLoad(
     totalLoad: totalLoadBeforeSafety,
     totalLoadWithSafety: finalLoad,
     airChangeRate: ENHANCED_CONSTANTS.airChangeRates.freezer
+    
+    // Additional data for results display
+    productData: {
+      fanMotorRating: fanMotorRating.toString(),
+      numberOfFans: numberOfFans.toString(),
+      fanAirFlowRate: fanAirFlowRate.toString()
+    }
   };
 }

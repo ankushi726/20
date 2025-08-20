@@ -44,7 +44,7 @@ export default function FreezerTabLayout() {
       <Tabs.Screen
         name="product"
         options={{
-          title: 'Product',
+          title: 'Equipment',
           tabBarIcon: ({ color, size }) => (
             <Package color={color} size={size} strokeWidth={2} />
           ),

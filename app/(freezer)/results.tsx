@@ -71,7 +71,7 @@ export default function ResultsScreen() {
 
   return (
     <LinearGradient colors={['#F8FAFC', '#EBF8FF']} style={styles.container}>
-      <Header title="Calculation Results" showBack={true} />
+      <Header title="Calculation Results" step={4} totalSteps={4} />
       
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.mainResultCard}>

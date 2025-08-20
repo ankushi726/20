@@ -86,7 +86,7 @@ export default function RoomScreen() {
 
   return (
     <LinearGradient colors={['#F8FAFC', '#EBF8FF']} style={styles.container}>
-      <Header title="Room Specifications" showBack={true} />
+      <Header title="Room Specifications" step={1} totalSteps={4} />
       
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.section}>

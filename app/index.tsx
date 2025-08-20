@@ -30,58 +30,60 @@ export default function HomeScreen() {
       colors={['#EBF8FF', '#DBEAFE', '#BFDBFE']}
       style={styles.container}
     >
-      <View style={styles.content}>
+      <View style={styles.safeArea}>
         <View style={styles.header}>
           <Text style={styles.title}>Enzo CoolCalc</Text>
           <Text style={styles.subtitle}>Professional Refrigeration Load Calculator</Text>
         </View>
 
-        <View style={styles.optionsContainer}>
-          <TouchableOpacity style={styles.optionCard} onPress={handleFreezerPress}>
-            <LinearGradient
-              colors={['#3B82F6', '#2563EB']}
-              style={styles.cardGradient}
-            >
-              <Snowflake color="#FFFFFF" size={32} strokeWidth={2} />
-              <Text style={styles.cardTitle}>Freezer</Text>
-              <Text style={styles.cardSubtitle}>Standard freezer rooms</Text>
-              <Text style={styles.cardDescription}>Calculate cooling loads for standard freezer applications (-18°C to -25°C)</Text>
-            </LinearGradient>
-          </TouchableOpacity>
+        <View style={styles.scrollContainer}>
+          <View style={styles.optionsContainer}>
+            <TouchableOpacity style={styles.optionCard} onPress={handleFreezerPress}>
+              <LinearGradient
+                colors={['#3B82F6', '#2563EB']}
+                style={styles.cardGradient}
+              >
+                <Snowflake color="#FFFFFF" size={32} strokeWidth={2} />
+                <Text style={styles.cardTitle}>Freezer</Text>
+                <Text style={styles.cardSubtitle}>Standard freezer rooms</Text>
+                <Text style={styles.cardDescription}>Calculate cooling loads for standard freezer applications (-18°C to -25°C)</Text>
+              </LinearGradient>
+            </TouchableOpacity>
 
-          <TouchableOpacity 
-            style={styles.optionCard} 
-            onPress={handleBlastFreezerPress}
-          >
-            <LinearGradient
-              colors={['#DC2626', '#B91C1C']}
-              style={styles.cardGradient}
+            <TouchableOpacity 
+              style={styles.optionCard} 
+              onPress={handleBlastFreezerPress}
             >
-              <Wind color="#FFFFFF" size={32} strokeWidth={2} />
-              <Text style={styles.cardTitle}>Blast Freezer</Text>
-              <Text style={styles.cardSubtitle}>Quick freezing applications</Text>
-              <Text style={styles.cardDescription}>Calculate cooling loads for rapid freezing applications (-25°C to -40°C)</Text>
-            </LinearGradient>
-          </TouchableOpacity>
+              <LinearGradient
+                colors={['#DC2626', '#B91C1C']}
+                style={styles.cardGradient}
+              >
+                <Wind color="#FFFFFF" size={32} strokeWidth={2} />
+                <Text style={styles.cardTitle}>Blast Freezer</Text>
+                <Text style={styles.cardSubtitle}>Quick freezing applications</Text>
+                <Text style={styles.cardDescription}>Calculate cooling loads for rapid freezing applications (-25°C to -40°C)</Text>
+              </LinearGradient>
+            </TouchableOpacity>
 
-          <TouchableOpacity 
-            style={styles.optionCard} 
-            onPress={handleColdRoomPress}
-          >
-            <LinearGradient
-              colors={['#10B981', '#059669']}
-              style={styles.cardGradient}
+            <TouchableOpacity 
+              style={styles.optionCard} 
+              onPress={handleColdRoomPress}
             >
-              <Thermometer color="#FFFFFF" size={32} strokeWidth={2} />
-              <Text style={styles.cardTitle}>Cold Room</Text>
-              <Text style={styles.cardSubtitle}>Above freezing storage</Text>
-              <Text style={styles.cardDescription}>Calculate cooling loads for chilled storage (+2°C to +15°C)</Text>
-            </LinearGradient>
-          </TouchableOpacity>
-        </View>
+              <LinearGradient
+                colors={['#10B981', '#059669']}
+                style={styles.cardGradient}
+              >
+                <Thermometer color="#FFFFFF" size={32} strokeWidth={2} />
+                <Text style={styles.cardTitle}>Cold Room</Text>
+                <Text style={styles.cardSubtitle}>Above freezing storage</Text>
+                <Text style={styles.cardDescription}>Calculate cooling loads for chilled storage (+2°C to +15°C)</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          </View>
 
-        <View style={styles.footer}>
-          <Text style={styles.footerText}>Professional refrigeration engineering calculations</Text>
+          <View style={styles.footer}>
+            <Text style={styles.footerText}>Professional refrigeration engineering calculations</Text>
+          </View>
         </View>
       </View>
     </LinearGradient>
@@ -92,15 +94,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  content: {
+  safeArea: {
     flex: 1,
-    paddingHorizontal: 20,
-    paddingVertical: 40,
+    paddingTop: 60,
   },
   header: {
     alignItems: 'center',
-    marginBottom: 40,
-    marginTop: 20,
+    paddingHorizontal: 20,
+    marginBottom: 20,
   },
   title: {
     fontSize: 32,
@@ -113,9 +114,13 @@ const styles = StyleSheet.create({
     color: '#64748B',
     textAlign: 'center',
   },
-  optionsContainer: {
+  scrollContainer: {
     flex: 1,
+    paddingHorizontal: 20,
+  },
+  optionsContainer: {
     gap: 16,
+    paddingBottom: 20,
   },
   optionCard: {
     borderRadius: 16,
@@ -150,11 +155,12 @@ const styles = StyleSheet.create({
   },
   footer: {
     alignItems: 'center',
-    marginTop: 20,
+    paddingVertical: 20,
   },
   footerText: {
     fontSize: 12,
     color: '#64748B',
     textAlign: 'center',
+    paddingHorizontal: 20,
   },
 });

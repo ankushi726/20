@@ -16,13 +16,14 @@ export default function ProductScreen() {
     outgoingTemp: FREEZER_DEFAULTS.productOutgoingTemp.toString(),
     storageType: FREEZER_DEFAULTS.storageType,
     numberOfPeople: FREEZER_DEFAULTS.numberOfPeople.toString(),
-    workingHours: FREEZER_DEFAULTS.hoursWorking.toString(),
+    workingHours: '16', // Updated from 4 to 16 hours
     lightingWattage: FREEZER_DEFAULTS.lightingWattage.toString(),
     equipmentLoad: FREEZER_DEFAULTS.equipmentLoad.toString(),
     // Equipment details
     fanMotorRating: FREEZER_DEFAULTS.fanMotorRating.toString(),
     numberOfFans: FREEZER_DEFAULTS.numberOfFans.toString(),
     fanOperatingHours: FREEZER_DEFAULTS.fanOperatingHours.toString(),
+    fanAirFlowRate: '2000', // CFM per fan
     doorHeatersLoad: FREEZER_DEFAULTS.doorHeatersLoad.toString(),
     trayHeatersLoad: FREEZER_DEFAULTS.trayHeatersLoad.toString(),
     peripheralHeatersLoad: FREEZER_DEFAULTS.peripheralHeatersLoad.toString(),
@@ -89,14 +90,15 @@ export default function ProductScreen() {
     loadRoomData();
   }, []);
 
-  const maxStorageCapacity = roomVolume * selectedProduct.density * selectedProduct.storageEfficiency * selectedStorageFactor;
+  const maxStorageCapacity = roomVolume * (selectedProduct?.density || 800) * (selectedProduct?.storageEfficiency || 0.65) * (selectedStorageFactor || 0.65);
   const storageUtilization = maxStorageCapacity > 0 ? (parseFloat(product.dailyLoad) / maxStorageCapacity) * 100 : 0;
-  const totalFanLoad = parseFloat(product.fanMotorRating) * parseFloat(product.numberOfFans);
-  const totalHeaterLoad = parseFloat(product.doorHeatersLoad) + parseFloat(product.trayHeatersLoad) + parseFloat(product.peripheralHeatersLoad);
+  const totalFanLoad = (parseFloat(product.fanMotorRating) || 0) * (parseFloat(product.numberOfFans) || 0);
+  const totalHeaterLoad = (parseFloat(product.doorHeatersLoad) || 0) + (parseFloat(product.trayHeatersLoad) || 0) + (parseFloat(product.peripheralHeatersLoad) || 0);
+  const totalAirFlow = (parseFloat(product.numberOfFans) || 0) * (parseFloat(product.fanAirFlowRate) || 0);
 
   return (
     <LinearGradient colors={['#F8FAFC', '#EBF8FF']} style={styles.container}>
-      <Header title="Product & Equipment Details" showBack={true} />
+      <Header title="Product & Equipment Details" step={3} totalSteps={4} />
       
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.section}>
@@ -157,19 +159,19 @@ export default function ProductScreen() {
               <InputCard 
                 label="Specific Heat Above Freezing (Cp Above)" 
                 unit="kJ/kg·K" 
-                value={product.customCpAbove || selectedProduct.specificHeatAbove.toString()} 
+                value={product.customCpAbove || (selectedProduct?.specificHeatAbove || 3.0).toString()} 
                 onChangeText={(value) => handleInputChange('customCpAbove', value)} 
               />
               <InputCard 
                 label="Specific Heat Below Freezing (Cp Below)" 
                 unit="kJ/kg·K" 
-                value={product.customCpBelow || selectedProduct.specificHeatBelow.toString()} 
+                value={product.customCpBelow || (selectedProduct?.specificHeatBelow || 1.6).toString()} 
                 onChangeText={(value) => handleInputChange('customCpBelow', value)} 
               />
               <InputCard 
                 label="Latent Heat of Freezing" 
                 unit="kJ/kg" 
-                value={product.customLatentHeat || selectedProduct.latentHeat.toString()} 
+                value={product.customLatentHeat || (selectedProduct?.latentHeat || 200).toString()} 
                 onChangeText={(value) => handleInputChange('customLatentHeat', value)} 
               />
             </>
@@ -177,27 +179,27 @@ export default function ProductScreen() {
             <View style={styles.propertiesCard}>
               <View style={styles.propertyRow}>
                 <Text style={styles.propertyLabel}>Specific Heat (Above Freezing):</Text>
-                <Text style={styles.propertyValue}>{selectedProduct.specificHeatAbove} kJ/kg·K</Text>
+                <Text style={styles.propertyValue}>{selectedProduct?.specificHeatAbove || 3.0} kJ/kg·K</Text>
               </View>
               <View style={styles.propertyRow}>
                 <Text style={styles.propertyLabel}>Specific Heat (Below Freezing):</Text>
-                <Text style={styles.propertyValue}>{selectedProduct.specificHeatBelow} kJ/kg·K</Text>
+                <Text style={styles.propertyValue}>{selectedProduct?.specificHeatBelow || 1.6} kJ/kg·K</Text>
               </View>
               <View style={styles.propertyRow}>
                 <Text style={styles.propertyLabel}>Latent Heat of Freezing:</Text>
-                <Text style={styles.propertyValue}>{selectedProduct.latentHeat} kJ/kg</Text>
+                <Text style={styles.propertyValue}>{selectedProduct?.latentHeat || 200} kJ/kg</Text>
               </View>
               <View style={styles.propertyRow}>
                 <Text style={styles.propertyLabel}>Freezing Point:</Text>
-                <Text style={styles.propertyValue}>{selectedProduct.freezingPoint} °C</Text>
+                <Text style={styles.propertyValue}>{selectedProduct?.freezingPoint || -2.0} °C</Text>
               </View>
               <View style={styles.propertyRow}>
                 <Text style={styles.propertyLabel}>Density:</Text>
-                <Text style={styles.propertyValue}>{selectedProduct.density} kg/m³</Text>
+                <Text style={styles.propertyValue}>{selectedProduct?.density || 800} kg/m³</Text>
               </View>
               <View style={styles.propertyRow}>
                 <Text style={styles.propertyLabel}>Storage Efficiency:</Text>
-                <Text style={styles.propertyValue}>{(selectedProduct.storageEfficiency * 100).toFixed(0)}%</Text>
+                <Text style={styles.propertyValue}>{((selectedProduct?.storageEfficiency || 0.65) * 100).toFixed(0)}%</Text>
               </View>
             </View>
           )}
@@ -225,6 +227,13 @@ export default function ProductScreen() {
             unit="hrs" 
             value={product.fanOperatingHours} 
             onChangeText={(value) => handleInputChange('fanOperatingHours', value)} 
+          />
+          
+          <InputCard 
+            label="Fan Air Flow Rate" 
+            unit="CFM" 
+            value={product.fanAirFlowRate} 
+            onChangeText={(value) => handleInputChange('fanAirFlowRate', value)} 
           />
           
           <InputCard 
@@ -260,7 +269,7 @@ export default function ProductScreen() {
           />
           
           <InputCard 
-            label="Working Hours Inside Room" 
+            label="Hours of Occupancy" 
             unit="hrs" 
             value={product.workingHours} 
             onChangeText={(value) => handleInputChange('workingHours', value)} 
@@ -294,6 +303,10 @@ export default function ProductScreen() {
               <Text style={styles.summaryValue}>{storageUtilization.toFixed(1)}%</Text>
             </View>
             <View style={styles.summaryRow}>
+              <Text style={styles.summaryLabel}>Total Air Flow:</Text>
+              <Text style={styles.summaryValue}>{totalAirFlow.toFixed(0)} CFM</Text>
+            </View>
+            <View style={styles.summaryRow}>
               <Text style={styles.summaryLabel}>Total Fan Load:</Text>
               <Text style={styles.summaryValue}>{totalFanLoad.toFixed(2)} kW</Text>
             </View>
@@ -303,7 +316,7 @@ export default function ProductScreen() {
             </View>
             <View style={styles.summaryRow}>
               <Text style={styles.summaryLabel}>People Load:</Text>
-              <Text style={styles.summaryValue}>{(parseFloat(product.numberOfPeople) * 0.407 * (parseFloat(product.workingHours) / 24)).toFixed(3)} kW</Text>
+              <Text style={styles.summaryValue}>{((parseFloat(product.numberOfPeople) || 0) * 0.407 * ((parseFloat(product.workingHours) || 0) / 24)).toFixed(3)} kW</Text>
             </View>
           </View>
         </View>
